@@ -1,0 +1,44 @@
+@ Start of file ValToHex.s
+@ ARM assembly language program that 
+@ converts a 32 bit unsigned value stored in r1
+@ to it's hexadecimal ASCII string representation.
+@ Resulting string stored beginning at address 
+@ 0xA1000400. 
+@ Answer should contain 8 characters
+@ with leading zeros where appropriate, and
+@ should use uppercase 'A'-'F'.
+
+	.text
+	start:
+  
+    LDR	r1, =0xFEED1234
+
+    LDR r0, =0xA1000400
+    LDR r3, =0xF
+    LDR r4, =0x1C
+    
+  loop:	MOV r2, r1, LSR r4
+    AND r2, r3
+    CMP r2, #0xA
+    BMI digit
+    BPL letter
+    B fin
+    
+  digit:	ADD r2,r2,#0x30
+    STRB r2, [r0], #1
+    SUBS r4,r4,#0x4
+    BPL loop
+    B fin
+    
+  letter:	ADD r2,r2,#0x37
+    STRB r2, [r0], #1
+    SUBS r4,r4,#0x4
+    BPL loop
+    B fin
+    fin:	
+
+stop:   B	stop
+		.data
+    .end
+    
+@ End of file ValToHex.s
